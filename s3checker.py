@@ -4,6 +4,9 @@ import time
 import boto
 import re
 from boto.s3.key import Key
+import json
+from datetime import datetime
+import gzip
 
 class s3checker():
     def __init__(self):
@@ -20,11 +23,29 @@ class s3checker():
         with open('/home/ubuntu/etlpipeline/logs/processLog.log','r') as f:
             return map((lambda x:x.split()[3]), filter((lambda x:'SUCCESS' in x), f.read().split('\n')[:-1]))
 
+
     def processFile(self, filename):
         k = Key(self.s3.get_bucket('kingan-test0'))
-        k.key = filename
-        k.get_contents_to_filename('/home/ubuntu/etlpipeline/data/%s'%filename)
+
+        def processLine(self, filecontent):
+            pass
+
+        def getFileContent():
+            k.key = filename
+            k.get_contents_to_filename('/home/ubuntu/etlpipeline/data/%s'%filename)
+            with gzip.open('/home/ubuntu/etlpipeline/data/%s'%filename, 'r') as g:
+                return map((lambda x:x.split('\t')), g.read().split('\n'))
+
+        def setFileContent(filecontent):
+            with gzip.open('/home/ubuntu/etlpipeline/data/processed_%s'%filename,'w' ) as g:
+                map((lambda x:g.write(reduce((lambda x,y:x+' '+y), x))), filecontent)
+            k.key = 'processed_%s'%filename
+            k.set_contents_from_filename('/home/ubuntu/etlpipeline/data/processed_%s'%filename)
+
+        setFileContent(getFileContent())
+        #map(setFileContent, map(processLine, getFileContent()))
         return 0
+
 
     def mainChecker(self, s, m):
         while True:
