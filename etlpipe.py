@@ -1,5 +1,5 @@
 from mainLogger import mainLogger
-import sys
+import os, sys
 import time
 import boto
 import re
@@ -43,7 +43,12 @@ class s3checker():
             k.key = 'processed/processed_%s'%filename
             k.set_contents_from_filename('/home/ubuntu/etlpipeline/processed/processed_%s'%filename)
 
+        def fileCleanup():
+            os.remove('/home/ubuntu/etlpipeline/data/%s'%filename)
+            os.remove('/home/ubuntu/etlpipeline/processed/processed_%s'%filename)
+
         setFileContent(getFileContent())
+        fileCleanup()
         #map(setFileContent, map(processLine, getFileContent()))
         return 0
 
