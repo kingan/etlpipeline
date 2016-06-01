@@ -9,7 +9,7 @@ class mainLogger():
          logging.info('Hello')
 
      def writeSuccessLog(self, filename):
-         logging.warning('SUCCESS %s processed and stored at %s', filename, '/home/ubuntu/etlpipeline/processed')
+         logging.warning('SUCCESS %s processed and stored at %s', filename, '/home/ubuntu/etlpipeline/data')
 
      def writeErrorLog(self):
          logging.warning('Unexpected Error')
