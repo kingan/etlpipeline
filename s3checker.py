@@ -14,7 +14,8 @@ class s3checker():
 
     def checkBucket(self):
         kin = self.s3.get_bucket('kingan-test0')
-        return map((lambda x:x.name), kin.list())
+        return map((lambda x:x.split('/')[1]), map((lambda x:x.name), kin.list(prefix='data/'))[1:])
+        #return map((lambda x:x.name), kin.list))
 
     def checkFn(self, s):
         return s.checkBucket()
@@ -31,16 +32,16 @@ class s3checker():
             pass
 
         def getFileContent():
-            k.key = filename
+            k.key = 'data/%s'%filename
             k.get_contents_to_filename('/home/ubuntu/etlpipeline/data/%s'%filename)
             with gzip.open('/home/ubuntu/etlpipeline/data/%s'%filename, 'r') as g:
                 return map((lambda x:x.split('\t')), g.read().split('\n'))
 
         def setFileContent(filecontent):
-            with gzip.open('/home/ubuntu/etlpipeline/data/processed_%s'%filename,'w' ) as g:
+            with gzip.open('/home/ubuntu/etlpipeline/processed/processed_%s'%filename,'w' ) as g:
                 map((lambda x:g.write(reduce((lambda x,y:x+' '+y), x))), filecontent)
-            k.key = 'processed_%s'%filename
-            k.set_contents_from_filename('/home/ubuntu/etlpipeline/data/processed_%s'%filename)
+            k.key = 'processed/processed_%s'%filename
+            k.set_contents_from_filename('/home/ubuntu/etlpipeline/processed/processed_%s'%filename)
 
         setFileContent(getFileContent())
         #map(setFileContent, map(processLine, getFileContent()))
