@@ -18,8 +18,7 @@ class s3checker():
 
     # Function to yield .gz files from yi bucket
     def checkBucket(self):
-        kin = self.s3.get_bucket('kingan-test0')
-#        kin = self.s3.get_bucket('yi-engineering-recruitment')
+        kin = self.s3.get_bucket('yi-engineering-recruitment')
         fileList = map((lambda x:x.name), kin.list(prefix='data/2014/'))
         #
         #Create directory structure
@@ -47,8 +46,7 @@ class s3checker():
 
 
     def processFile(self, filename):
-        k = Key(self.s3.get_bucket('kingan-test0'))
-#        k = Key(self.s3.get_bucket('yi-engineering-recruitment'))
+        k = Key(self.s3.get_bucket('yi-engineering-recruitment'))
 
         def getFileContent():
             k.key = filename
