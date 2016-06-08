@@ -39,12 +39,13 @@ class s3checker():
         return s.checkBucket()
 
 
-
+    # Read logs and return successful operations
     def getSuccessList(self):
         with open('/home/ubuntu/etlpipeline/logs/processLog.log','r') as f:
             return map((lambda x:x.split()[3]), filter((lambda x:'SUCCESS' in x), f.read().split('\n')[:-1]))
 
 
+    # Get contents from S3, parse locally, and return to S3
     def processFile(self, filename):
         k = Key(self.s3.get_bucket('yi-engineering-recruitment'))
 
@@ -115,12 +116,13 @@ class s3checker():
                 for i in filecontent:
                     g.write(json.dumps(processLine(i)))
             
+            # Return to S3
             k.key = 'processed/aking/%s'%filename
             k.set_contents_from_filename('/home/ubuntu/etlpipeline/processed/%s'%(filename.split('/')[-1]))
 
             return 0
 
-
+        # Remove local files
         def fileCleanup():
             os.remove('/home/ubuntu/etlpipeline/%s'%filename)
             os.remove('/home/ubuntu/etlpipeline/processed/%s'%(filename.split('/')[-1]))
