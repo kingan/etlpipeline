@@ -18,7 +18,7 @@ class s3checker():
 
     # Function to yield .gz files from yi bucket
     def checkBucket(self):
-        kin = self.s3.get_bucket('yi-engineering-recruitment')
+        kin = self.s3.get_bucket('test-bucket0')
         fileList = map((lambda x:x.name), kin.list(prefix='data/2014/'))
         #
         #Create directory structure
@@ -47,7 +47,7 @@ class s3checker():
 
     # Get contents from S3, parse locally, and return to S3
     def processFile(self, filename):
-        k = Key(self.s3.get_bucket('yi-engineering-recruitment'))
+        k = Key(self.s3.get_bucket('test-bucket0'))
 
         def getFileContent():
             k.key = filename
@@ -131,7 +131,7 @@ class s3checker():
         fileCleanup()
         return 0
 
-
+    #Main function to loop indefinitely, check S3 bucket, assess if file is not processed, process file, and write success log
     def mainChecker(self, s, m):
         while True:
             try:
